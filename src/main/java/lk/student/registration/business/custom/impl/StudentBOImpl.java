@@ -12,6 +12,7 @@ import lk.student.registration.entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,10 +31,27 @@ public class StudentBOImpl implements StudentBO {
 
     @Autowired
     private StudentDAO dao;
+
     @Override
-    public void saveStudent(StudentDTO dto) throws Exception {
+    public ResponseEntity<Object> saveStudent(StudentDTO dto) throws Exception {
         Student student = mapper.getStudent(dto);
-        dao.save(student);
+        if(student.getEmail().isEmpty()){
+            student.setEmail(null);
+        }
+        List<Student> students = dao.findAll();
+        for (Student savedStudent : students) {
+            if(savedStudent.getNic().equalsIgnoreCase(student.getNic())){
+                return new ResponseEntity<>("Already saved a student under this NIC", HttpStatus.BAD_REQUEST);
+            }
+            if(savedStudent.getEmail() != null && savedStudent.getEmail().equals(student.getEmail())){
+                return new ResponseEntity<>("Already saved a student under this Email", HttpStatus.BAD_REQUEST);
+            }
+        }
+        Student save = dao.save(student);
+        if(save == null){
+            return new ResponseEntity<>("Failed to save the student", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(save, HttpStatus.CREATED);
     }
 
     @Override

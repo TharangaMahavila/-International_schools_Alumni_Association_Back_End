@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface StudentBO extends SuperBO {
-    public void saveStudent(StudentDTO dto) throws Exception;
+    public ResponseEntity<Object> saveStudent(StudentDTO dto) throws Exception;
     public void updateStudent(StudentDTO dto) throws Exception;
     public List<StudentDTO> findAllStudent() throws Exception;
     public StudentDTO findStudent(int id) throws Exception;

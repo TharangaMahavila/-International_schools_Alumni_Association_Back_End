@@ -81,8 +81,7 @@ public class StudentController {
              }
              studentDTO.setImagePath(savePath);
          }
-         bo.saveStudent(studentDTO);
-         return new ResponseEntity<>(studentDTO, HttpStatus.CREATED);
+         return bo.saveStudent(studentDTO);
       }catch (Exception e){
         return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
       }
