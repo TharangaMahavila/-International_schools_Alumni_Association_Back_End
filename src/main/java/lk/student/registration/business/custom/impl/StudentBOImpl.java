@@ -128,12 +128,12 @@ public class StudentBOImpl implements StudentBO {
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(student.getDate().toString()));
+            cell = new PdfPCell(new Phrase(String.valueOf(student.getDate())));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(student.getMonth().toString()));
+            cell = new PdfPCell(new Phrase(String.valueOf(student.getMonth())));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
