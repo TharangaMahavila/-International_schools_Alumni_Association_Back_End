@@ -4,7 +4,6 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import javafx.scene.control.Alert;
 import lk.student.registration.business.custom.StudentBO;
 import lk.student.registration.business.util.EntityDTOMapper;
 import lk.student.registration.dao.StudentDAO;
@@ -18,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.swing.border.Border;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.*;
@@ -88,22 +86,61 @@ public class StudentBOImpl implements StudentBO {
             return new ResponseEntity<>("Can't find student", HttpStatus.BAD_REQUEST);
         }
         Student student = studentOptional.get();
-        Document document = new Document();
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
         try {
-            PdfPTable table = new PdfPTable(3);
-            table.setWidthPercentage(60);
-            table.setWidths(new int[]{2,1,5});
-
-            Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-
-            PdfPCell cell;
-
             HashMap<String, String> studentMap = new LinkedHashMap<>();
             studentMap.put("ID", String.valueOf(student.getId()));
             studentMap.put("Name", student.getName().getFname()+" "+student.getName().getLname());
             studentMap.put("Address", student.getAddress().getLine1()+", "+student.getAddress().getLine2());
             studentMap.put("Contact", student.getContact());
+            studentMap.put("Email", student.getEmail());
+            studentMap.put("NIC",student.getNic());
+            studentMap.put("BirthDay",String.valueOf(student.getBirthDay().getDate())+" "+String.valueOf(student.getBirthDay().getMonth())+" "+String.valueOf(student.getBirthDay().getYear()));
+            studentMap.put("Gender",String.valueOf(student.getGender()));
+            studentMap.put("DsDivision",student.getDsDivision());
+            studentMap.put("DnDivision",student.getGnDivision());
+            studentMap.put("Language",student.getLanguage());
+            studentMap.put("experience",student.getExperience());
+            if(student.isFollowed()){
+                studentMap.put("CourseDuration",student.getCourseDuration());
+            }
+
+            Document document = new Document();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            PdfWriter pdfWriter = PdfWriter.getInstance(document, out);
+            HeaderFooterPageEvent headerFooterPageEvent = new HeaderFooterPageEvent();
+            pdfWriter.setPageEvent(headerFooterPageEvent);
+            document.open();
+
+            Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+
+            /*//Create Title
+            Chunk student_info = new Chunk("Student Info");
+            Paragraph title = new Paragraph(student_info);
+            title.setAlignment(Element.ALIGN_CENTER);
+            title.setAlignment(Element.ALIGN_MIDDLE);
+            document.add(title);*/
+
+
+            //add empty line
+            addEmptyLine(document, 2);
+            //Create Image
+            String imagePath = student.getImagePath();
+            Image image = Image.getInstance(imagePath);
+            image.scaleToFit(300,300);
+            image.setAlignment(Element.ALIGN_CENTER);
+            image.setAlignment(Element.ALIGN_MIDDLE);
+            document.add(image);
+
+            //add empty line
+            addEmptyLine(document, 2);
+
+            //Create Table
+            PdfPTable table = new PdfPTable(3);
+            table.setWidthPercentage(60);
+            table.setWidths(new int[]{3,1,5});
+
+            PdfPCell cell;
 
             for (Map.Entry<String, String> field : studentMap.entrySet()) {
 
@@ -124,24 +161,28 @@ public class StudentBOImpl implements StudentBO {
                 cell.setBorder(0);
                 table.addCell(cell);
             }
-
-            PdfWriter.getInstance(document, out);
-            document.open();
             document.add(table);
 
             document.close();
 
+            ByteArrayInputStream bis = new ByteArrayInputStream(out.toByteArray());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "inline; filename="+student.getName().getFname()+"_"+student.getId()+".pdf");
+            return ResponseEntity
+                    .ok()
+                    .header(headers.toString())
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(new InputStreamResource(bis));
+
         }catch (Exception e){
             throw new RuntimeException(e);
         }
-        ByteArrayInputStream bis = new ByteArrayInputStream(out.toByteArray());
+    }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "inline; filename="+student.getName().getFname()+"_"+student.getId()+".pdf");
-        return ResponseEntity
-                .ok()
-                .header(headers.toString())
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(bis));
+    private void addEmptyLine(Document document, int number) throws DocumentException {
+        for (int i = 0; i < number; i++) {
+            document.add(new Paragraph(" "));
+        }
     }
 }

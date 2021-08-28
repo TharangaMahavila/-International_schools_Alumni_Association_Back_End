@@ -1,10 +1,7 @@
 package lk.student.registration.business.util;
 
 import lk.student.registration.dto.StudentDTO;
-import lk.student.registration.entity.Address;
-import lk.student.registration.entity.BirthDay;
-import lk.student.registration.entity.Name;
-import lk.student.registration.entity.Student;
+import lk.student.registration.entity.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
