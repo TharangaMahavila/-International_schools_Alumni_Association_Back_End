@@ -59,7 +59,7 @@
             <version>2.8.0</version>
         </dependency>
 
-        <!--Itext dependancy-->
+        <!--Itext dependancy.-->
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
