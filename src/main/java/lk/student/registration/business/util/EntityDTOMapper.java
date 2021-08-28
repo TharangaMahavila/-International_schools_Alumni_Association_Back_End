@@ -1,10 +1,7 @@
 package lk.student.registration.business.util;
 
 import lk.student.registration.dto.StudentDTO;
-import lk.student.registration.entity.Address;
-import lk.student.registration.entity.BirthDay;
-import lk.student.registration.entity.Name;
-import lk.student.registration.entity.Student;
+import lk.student.registration.entity.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -14,19 +11,19 @@ import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 public interface EntityDTOMapper {
 
 
-    @Mapping(source = ".", target = "name", qualifiedByName = "getName")
-    @Mapping(source = ".", target = "address", qualifiedByName = "getAddress")
-    @Mapping(source = ".", target = "birthDay", qualifiedByName = "getBirthday")
+     @Mapping(source = ".", target = "name", qualifiedByName = "getName")
+     @Mapping(source = ".", target = "address", qualifiedByName = "getAddress")
+     @Mapping(source = ".", target = "birthDay", qualifiedByName = "getBirthday")
     Student getStudent(StudentDTO dto);
 
-    @Mapping(source = ".", target = "fname", qualifiedByName = "getFname")
-    @Mapping(source = ".", target = "lname", qualifiedByName = "getLname")
-    @Mapping(source = ".", target = "oname", qualifiedByName = "getOname")
-    @Mapping(source = ".", target = "line1", qualifiedByName = "getLine1")
-    @Mapping(source = ".", target = "line2", qualifiedByName = "getLine2")
-    @Mapping(source = ".", target = "date", qualifiedByName = "getDate")
-    @Mapping(source = ".", target = "month", qualifiedByName = "getMonth")
-    @Mapping(source = ".", target = "year", qualifiedByName = "getYear")
+     @Mapping(source = ".", target = "fname", qualifiedByName = "getFname")
+     @Mapping(source = ".", target = "lname", qualifiedByName = "getLname")
+     @Mapping(source = ".", target = "oname", qualifiedByName = "getOname")
+     @Mapping(source = ".", target = "line1", qualifiedByName = "getLine1")
+     @Mapping(source = ".", target = "line2", qualifiedByName = "getLine2")
+     @Mapping(source = ".", target = "date", qualifiedByName = "getDate")
+     @Mapping(source = ".", target = "month", qualifiedByName = "getMonth")
+     @Mapping(source = ".", target = "year", qualifiedByName = "getYear")
     StudentDTO getStudentDTO(Student student);
 
     @Named("getName")

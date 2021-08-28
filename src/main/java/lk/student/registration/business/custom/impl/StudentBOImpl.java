@@ -19,8 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,100 +79,110 @@ public class StudentBOImpl implements StudentBO {
     }
 
     @Override
-    public ResponseEntity<InputStreamResource>  getPdf(int id) throws Exception {
+    public ResponseEntity<?>  getPdf(int id) throws Exception {
 
-        StudentDTO student = findStudent(id);
+        Optional<Student> studentOptional = dao.findById(id);
+        if(!studentOptional.isPresent()){
+            return new ResponseEntity<>("Can't find student", HttpStatus.BAD_REQUEST);
+        }
+        Student student = studentOptional.get();
 
-        Document document = new Document();
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
-            PdfPTable table = new PdfPTable(10);
-            table.setWidthPercentage(60);
-            table.setWidths(new int[]{1,3,3,3,3,3,3,3,3,3});
+            HashMap<String, String> studentMap = new LinkedHashMap<>();
+            studentMap.put("ID", String.valueOf(student.getId()));
+            studentMap.put("Name", student.getName().getFname()+" "+student.getName().getLname());
+            studentMap.put("Address", student.getAddress().getLine1()+", "+student.getAddress().getLine2());
+            studentMap.put("Contact", student.getContact());
+            studentMap.put("Email", student.getEmail());
+            studentMap.put("NIC",student.getNic());
+            studentMap.put("BirthDay",String.valueOf(student.getBirthDay().getDate())+" "+String.valueOf(student.getBirthDay().getMonth())+" "+String.valueOf(student.getBirthDay().getYear()));
+            studentMap.put("Gender",String.valueOf(student.getGender()));
+            studentMap.put("DsDivision",student.getDsDivision());
+            studentMap.put("DnDivision",student.getGnDivision());
+            studentMap.put("Language",student.getLanguage());
+            studentMap.put("experience",student.getExperience());
+            if(student.isFollowed()){
+                studentMap.put("CourseDuration",student.getCourseDuration());
+            }
+
+            Document document = new Document();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            PdfWriter pdfWriter = PdfWriter.getInstance(document, out);
+            HeaderFooterPageEvent headerFooterPageEvent = new HeaderFooterPageEvent();
+            pdfWriter.setPageEvent(headerFooterPageEvent);
+            document.open();
 
             Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
 
-            PdfPCell hcell = new PdfPCell(new Phrase("ID", headFont));
-            hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(hcell);
+            /*//Create Title
+            Chunk student_info = new Chunk("Student Info");
+            Paragraph title = new Paragraph(student_info);
+            title.setAlignment(Element.ALIGN_CENTER);
+            title.setAlignment(Element.ALIGN_MIDDLE);
+            document.add(title);*/
 
-            hcell = new PdfPCell(new Phrase("First Name", headFont));
-            hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(hcell);
 
-            hcell = new PdfPCell(new Phrase("Last Name", headFont));
-            hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(hcell);
+            //add empty line
+            addEmptyLine(document, 2);
+            //Create Image
+            String imagePath = student.getImagePath();
+            Image image = Image.getInstance(imagePath);
+            image.scaleToFit(300,300);
+            image.setAlignment(Element.ALIGN_CENTER);
+            image.setAlignment(Element.ALIGN_MIDDLE);
+            document.add(image);
+
+            //add empty line
+            addEmptyLine(document, 2);
+
+            //Create Table
+            PdfPTable table = new PdfPTable(3);
+            table.setWidthPercentage(60);
+            table.setWidths(new int[]{3,1,5});
 
             PdfPCell cell;
 
-            cell = new PdfPCell(new Phrase(String.valueOf(student.getId())));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
+            for (Map.Entry<String, String> field : studentMap.entrySet()) {
 
-            cell = new PdfPCell(new Phrase(student.getFname().toString()));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
+                cell = new PdfPCell(new Phrase(field.getKey(), headFont));
+                cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                cell.setBorder(0);
+                table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(student.getLname().toString()));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
+                cell = new PdfPCell(new Phrase(":", headFont));
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setBorder(0);
+                table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(student.getLine1().toString()));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(student.getLine2().toString()));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(student.getContact().toString()));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(student.getEmail().toString()));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(student.getNic().toString()));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(String.valueOf(student.getDate())));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(String.valueOf(student.getMonth())));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-
-            PdfWriter.getInstance(document, out);
-            document.open();
+                cell = new PdfPCell(new Phrase(field.getValue()));
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                cell.setBorder(0);
+                table.addCell(cell);
+            }
             document.add(table);
 
             document.close();
 
+            ByteArrayInputStream bis = new ByteArrayInputStream(out.toByteArray());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "inline; filename="+student.getName().getFname()+"_"+student.getId()+".pdf");
+            return ResponseEntity
+                    .ok()
+                    .header(headers.toString())
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(new InputStreamResource(bis));
+
         }catch (Exception e){
             throw new RuntimeException(e);
         }
-        ByteArrayInputStream bis = new ByteArrayInputStream(out.toByteArray());
+    }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "inline; filename="+student.getFname()+"_"+student.getId()+".pdf");
-        return ResponseEntity
-                .ok()
-                .header(headers.toString())
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(bis));
+    private void addEmptyLine(Document document, int number) throws DocumentException {
+        for (int i = 0; i < number; i++) {
+            document.add(new Paragraph(" "));
+        }
     }
 }
