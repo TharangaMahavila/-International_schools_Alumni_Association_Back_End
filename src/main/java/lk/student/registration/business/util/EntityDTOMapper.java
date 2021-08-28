@@ -10,7 +10,6 @@ import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 @Mapper(componentModel = "spring")
 public interface EntityDTOMapper {
 
-
      @Mapping(source = ".", target = "name", qualifiedByName = "getName")
      @Mapping(source = ".", target = "address", qualifiedByName = "getAddress")
      @Mapping(source = ".", target = "birthDay", qualifiedByName = "getBirthday")
