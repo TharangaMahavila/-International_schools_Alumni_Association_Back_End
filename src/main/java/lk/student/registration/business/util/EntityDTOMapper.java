@@ -14,19 +14,19 @@ import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 public interface EntityDTOMapper {
 
 
-    @Mapping(source = ".", target = "name", qualifiedByName = "getName")
-    @Mapping(source = ".", target = "address", qualifiedByName = "getAddress")
-    @Mapping(source = ".", target = "birthDay", qualifiedByName = "getBirthday")
+     @Mapping(source = ".", target = "name", qualifiedByName = "getName")
+     @Mapping(source = ".", target = "address", qualifiedByName = "getAddress")
+     @Mapping(source = ".", target = "birthDay", qualifiedByName = "getBirthday")
     Student getStudent(StudentDTO dto);
 
-    @Mapping(source = ".", target = "fname", qualifiedByName = "getFname")
-    @Mapping(source = ".", target = "lname", qualifiedByName = "getLname")
-    @Mapping(source = ".", target = "oname", qualifiedByName = "getOname")
-    @Mapping(source = ".", target = "line1", qualifiedByName = "getLine1")
-    @Mapping(source = ".", target = "line2", qualifiedByName = "getLine2")
-    @Mapping(source = ".", target = "date", qualifiedByName = "getDate")
-    @Mapping(source = ".", target = "month", qualifiedByName = "getMonth")
-    @Mapping(source = ".", target = "year", qualifiedByName = "getYear")
+     @Mapping(source = ".", target = "fname", qualifiedByName = "getFname")
+     @Mapping(source = ".", target = "lname", qualifiedByName = "getLname")
+     @Mapping(source = ".", target = "oname", qualifiedByName = "getOname")
+     @Mapping(source = ".", target = "line1", qualifiedByName = "getLine1")
+     @Mapping(source = ".", target = "line2", qualifiedByName = "getLine2")
+     @Mapping(source = ".", target = "date", qualifiedByName = "getDate")
+     @Mapping(source = ".", target = "month", qualifiedByName = "getMonth")
+     @Mapping(source = ".", target = "year", qualifiedByName = "getYear")
     StudentDTO getStudentDTO(Student student);
 
     @Named("getName")

@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: lk.student.registration.business.util.EntityDTOMapperTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 1, Errors: 1, Skipped: 0, Time elapsed: 9.511 s <<< FAILURE! - in lk.student.registration.business.util.EntityDTOMapperTest
+getStudentDTO  Time elapsed: 0.22 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <Ganga> but was: <null>
+	at lk.student.registration.business.util.EntityDTOMapperTest.getStudentDTO(EntityDTOMapperTest.java:67)
+
+getStudent  Time elapsed: 0.01 s  <<< ERROR!
+java.lang.NullPointerException
+	at lk.student.registration.business.util.EntityDTOMapperTest.getStudent(EntityDTOMapperTest.java:44)
+

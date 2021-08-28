@@ -13,5 +13,5 @@ public interface StudentBO extends SuperBO {
     public List<StudentDTO> findAllStudent() throws Exception;
     public StudentDTO findStudent(int id) throws Exception;
     public void deleteStudent(int id) throws Exception;
-    public ResponseEntity<InputStreamResource> getPdf(int id) throws Exception;
+    public ResponseEntity<?> getPdf(int id) throws Exception;
 }
