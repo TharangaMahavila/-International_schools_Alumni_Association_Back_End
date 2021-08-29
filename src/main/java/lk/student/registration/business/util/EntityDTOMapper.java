@@ -5,7 +5,6 @@ import lk.student.registration.entity.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 
 @Mapper(componentModel = "spring")
 public interface EntityDTOMapper {
