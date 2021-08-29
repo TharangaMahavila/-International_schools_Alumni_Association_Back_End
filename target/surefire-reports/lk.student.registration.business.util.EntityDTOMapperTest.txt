@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: lk.student.registration.business.util.EntityDTOMapperTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.635 s - in lk.student.registration.business.util.EntityDTOMapperTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 40.238 s - in lk.student.registration.business.util.EntityDTOMapperTest
