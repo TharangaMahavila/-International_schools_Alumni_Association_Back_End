@@ -2,91 +2,58 @@ package lk.student.registration.business.util;
 
 import lk.student.registration.dto.StudentDTO;
 import lk.student.registration.entity.*;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.springframework.stereotype.Service;
 
-@Mapper(componentModel = "spring")
-public interface EntityDTOMapper {
+@Service
+public class EntityDTOMapper {
 
-     @Mapping(source = ".", target = "name", qualifiedByName = "getName")
-     @Mapping(source = ".", target = "address", qualifiedByName = "getAddress")
-     @Mapping(source = ".", target = "birthDay", qualifiedByName = "getBirthday")
-    Student getStudent(StudentDTO dto);
+    public Student getStudent(StudentDTO dto){
+        Student student = new Student();
+        student.setId(dto.getId());
+        student.setName(new Name(dto.getFname(), dto.getLname(), dto.getOname()));
+        student.setAddress(new Address(dto.getLine1(), dto.getLine2()));
+        student.setContact(dto.getContact());
+        student.setEmail(dto.getEmail());
+        student.setNic(dto.getNic());
+        student.setBirthDay(new BirthDay(dto.getDate(), dto.getMonth(), dto.getYear()));
+        student.setGender(dto.getGender());
+        student.setDsDivision(dto.getDsDivision());
+        student.setGnDivision(dto.getGnDivision());
+        student.setLanguage(dto.getLanguage());
+        student.setExperience(dto.getExperience());
+        student.setFollowed(dto.isFollowed());
+        student.setCourseDuration(dto.getCourseDuration());
+        student.setHasImage(dto.isHasImage());
+        student.setImagePath(dto.getImagePath());
 
-     @Mapping(source = ".", target = "fname", qualifiedByName = "getFname")
-     @Mapping(source = ".", target = "lname", qualifiedByName = "getLname")
-     @Mapping(source = ".", target = "oname", qualifiedByName = "getOname")
-     @Mapping(source = ".", target = "line1", qualifiedByName = "getLine1")
-     @Mapping(source = ".", target = "line2", qualifiedByName = "getLine2")
-     @Mapping(source = ".", target = "date", qualifiedByName = "getDate")
-     @Mapping(source = ".", target = "month", qualifiedByName = "getMonth")
-     @Mapping(source = ".", target = "year", qualifiedByName = "getYear")
-    StudentDTO getStudentDTO(Student student);
-
-    @Named("getName")
-    default Name getName(StudentDTO dto){
-        Name name = new Name();
-        name.setFname(dto.getFname());
-        name.setLname(dto.getLname());
-        name.setOname(dto.getOname());
-        return name;
+        return student;
     }
 
-    @Named("getAddress")
-    default Address getAddress(StudentDTO dto){
-        Address address = new Address();
-        address.setLine1(dto.getLine1());
-        address.setLine2(dto.getLine2());
-        return address;
+    public StudentDTO getStudentDTO(Student student){
+        StudentDTO dto = new StudentDTO();
+        dto.setId(student.getId());
+        dto.setFname(student.getName().getFname());
+        dto.setLname(student.getName().getLname());
+        dto.setOname(student.getName().getOname());
+        dto.setLine1(student.getAddress().getLine1());
+        dto.setLine2(student.getAddress().getLine2());
+        dto.setContact(student.getContact());
+        dto.setEmail(student.getEmail());
+        dto.setNic(student.getNic());
+        dto.setDate(student.getBirthDay().getDate());
+        dto.setMonth(student.getBirthDay().getMonth());
+        dto.setYear(student.getBirthDay().getYear());
+        dto.setGender(student.getGender());
+        dto.setDsDivision(student.getDsDivision());
+        dto.setGnDivision(student.getGnDivision());
+        dto.setLanguage(student.getLanguage());
+        dto.setExperience(student.getExperience());
+        dto.setFollowed(student.isFollowed());
+        dto.setCourseDuration(student.getCourseDuration());
+        dto.setHasImage(student.isHasImage());
+        dto.setImagePath(student.getImagePath());
+
+        return dto;
     }
 
-    @Named("getBirthday")
-    default BirthDay getBirthday(StudentDTO dto){
-        BirthDay birthDay =  new BirthDay();
-        birthDay.setDate(dto.getDate());
-        birthDay.setMonth(dto.getMonth());
-        birthDay.setYear(dto.getYear());
-        return birthDay;
-    }
-
-    @Named("getFname")
-    default String getFname(Student student){
-        return student.getName().getFname();
-    }
-
-    @Named("getLname")
-    default String getLname(Student student){
-        return student.getName().getLname();
-    }
-
-    @Named("getOname")
-    default String getOname(Student student){
-        return student.getName().getOname();
-    }
-
-    @Named("getLine1")
-    default String getLine1(Student student){
-        return student.getAddress().getLine1();
-    }
-
-    @Named("getLine2")
-    default String getLine2(Student student){
-        return student.getAddress().getLine2();
-    }
-
-    @Named("getDate")
-    default String getDate(Student student){
-        return String.valueOf(student.getBirthDay().getDate());
-    }
-
-    @Named("getMonth")
-    default String getMonth(Student student){
-        return String.valueOf(student.getBirthDay().getMonth());
-    }
-
-    @Named("getYear")
-    default String getYear(Student student){
-        return String.valueOf(student.getBirthDay().getYear());
-    }
 }
