@@ -23,6 +23,7 @@ public class StudentDTO implements Serializable {
     private String line2;
     private String contact;
     private String email;
+    @NotNull(message = " Student NIC is required")
     private String nic;
     @NotNull(message = "Birth date is required")
     private int date;

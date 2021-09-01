@@ -125,12 +125,14 @@ public class StudentBOImpl implements StudentBO {
             //add empty line
             addEmptyLine(document, 2);
             //Create Image
-            String imagePath = student.getImagePath();
-            Image image = Image.getInstance(imagePath);
-            image.scaleToFit(300,300);
-            image.setAlignment(Element.ALIGN_CENTER);
-            image.setAlignment(Element.ALIGN_MIDDLE);
-            document.add(image);
+            if (student.isHasImage()){
+                String imagePath = student.getImagePath();
+                Image image = Image.getInstance(imagePath);
+                image.scaleToFit(300,300);
+                image.setAlignment(Element.ALIGN_CENTER);
+                image.setAlignment(Element.ALIGN_MIDDLE);
+                document.add(image);
+            }
 
             //add empty line
             addEmptyLine(document, 2);
